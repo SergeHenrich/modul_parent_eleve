@@ -1,4 +1,5 @@
 const express = require('express');
+const { buildResponse } = require('./models/database');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
@@ -58,6 +59,10 @@ app.get('/api/health', (req, res) => {
     version: '1.0.0'
   });
 });
+
+// Wrapper pour capturer les erreurs async
+const asyncHandler = (fn) => (req, res, next) =>
+  Promise.resolve(fn(req, res, next)).catch(next);
 
 // Gestion des erreurs 404
 app.use('*', (req, res) => {

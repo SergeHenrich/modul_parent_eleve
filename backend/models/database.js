@@ -47,3 +47,35 @@ module.exports = {
   getClient,
   pool
 };
+// Fonction de validation des entrées
+const sanitizeInput = (value, type = 'string') => {
+  if (value === null || value === undefined) return null;
+  switch (type) {
+    case 'int':
+      const parsed = parseInt(value);
+      return isNaN(parsed) ? null : parsed;
+    case 'float':
+      const floatParsed = parseFloat(value);
+      return isNaN(floatParsed) ? null : floatParsed;
+    case 'string':
+      return String(value).trim();
+    default:
+      return value;
+  }
+};
+
+// Helper de réponse standardisée
+const buildResponse = (success, data = null, error = null) => {
+  const response = { success };
+  if (data) response.data = data;
+  if (error) response.error = error;
+  return response;
+};
+
+module.exports = {
+  query,
+  getClient,
+  pool,
+  sanitizeInput,
+  buildResponse
+};
