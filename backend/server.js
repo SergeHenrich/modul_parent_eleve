@@ -48,13 +48,12 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Import des routes (à ajouter plus tard)
-// app.use('/api/auth', require('./routes/auth'));
-// app.use('/api/students', require('./routes/students'));
-// app.use('/api/grades', require('./routes/grades'));
-// app.use('/api/absences', require('./routes/absences'));
-// app.use('/api/messages', require('./routes/messages'));
-// app.use('/api/notifications', require('./routes/notifications'));
+// Import des routes
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/students', require('./routes/students'));
+app.use('/api/grades', require('./routes/grades'));
+app.use('/api/absences', require('./routes/absences'));
+app.use('/api/messages', require('./routes/messages'));
 
 // Middleware de gestion d'erreurs
 app.use((err, req, res, next) => {
