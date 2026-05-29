@@ -1,0 +1,46 @@
+name: CD
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build frontend
+        run: |
+          npm ci
+          npm run build
+        working-directory: frontend
+
+      - name: Nettoyer les node_modules
+        run: |
+          rm -rf node_modules
+        working-directory: frontend
+
+      - name: Nettoyer backend node_modules
+        run: |
+          rm -rf node_modules
+        working-directory: backend
+
+      - name: Déployer via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.O2SWITCH_FTP_SERVER }}
+          username: ${{ secrets.O2SWITCH_FTP_USERNAME }}
+          password: ${{ secrets.O2SWITCH_FTP_PASSWORD }}
+          port: ${{ secrets.O2SWITCH_FTP_PORT || 21 }}
+          local-dir: ./
+          server-dir: ${{ secrets.O2SWITCH_FTP_PATH }}
+          exclude: |
+            .git/
+            .gitignore
+            .env
