@@ -1,8 +1,11 @@
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const { query } = require('../models/database');
 
 // Middleware d'authentification JWT
 const authenticateToken = async (req, res, next) => {
+  req.requestId = crypto.randomUUID().slice(0, 8);
+  console.log('[AUTH] Requête', { requestId: req.requestId, method: req.method, path: req.path });
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
 
